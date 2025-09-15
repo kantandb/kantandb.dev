@@ -90,7 +90,7 @@ flowchart TD
 
 The KantanDB API is **OpenAPI-compliant** and exposed over HTTP/REST.
 
-\[openapi.yaml]
+[openapi.yaml]
 
 ### Endpoints
 
@@ -204,7 +204,7 @@ flowchart TD
     A[Receive JSON doc] --> B[Validate JSON]
     B --> C[Compute murmur hash]
     C --> D{Hash exists?}
-    D -- Yes --> E[Skip storing (duplicate)]
+    D -- Yes --> E[Skip storing /duplicate/]
     D -- No --> F[Store hash → doc on disk]
     F --> G[Generate unique ID]
     G --> H[Store ID → [hash] on disk]
