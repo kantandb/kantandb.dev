@@ -6,8 +6,8 @@
   --ink: #16231d;
   --muted: #647068;
   --line: #d2d0c6;
-  --green: #168057;
-  --green-bright: #40c98b;
+  --green: #c00010;
+  --green-bright: #f05848;
   --terminal: #15221c;
   --white: #fffdf7;
 }
@@ -25,7 +25,7 @@ body {
   margin: 0;
   color: var(--ink);
   background:
-    radial-gradient(circle at 78% 2%, rgb(64 201 139 / 12%), transparent 25rem),
+    radial-gradient(circle at 78% 2%, rgb(240 88 72 / 12%), transparent 25rem),
     var(--paper);
   font-family: "Manrope", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -60,15 +60,11 @@ footer {
 }
 
 .brand-mark {
-  display: grid;
+  display: block;
   width: 34px;
   height: 34px;
-  place-items: center;
   border-radius: 9px;
-  color: var(--white);
-  background: var(--ink);
-  font-family: "DM Mono", monospace;
-  font-size: 15px;
+  object-fit: contain;
 }
 
 .source-link {
@@ -120,7 +116,7 @@ footer {
   height: 7px;
   border-radius: 50%;
   background: var(--green-bright);
-  box-shadow: 0 0 0 5px rgb(64 201 139 / 15%);
+  box-shadow: 0 0 0 5px rgb(240 88 72 / 15%);
 }
 
 h1,
@@ -243,7 +239,7 @@ h1 em {
 .method {
   padding: 5px 8px;
   border-radius: 5px;
-  color: #12271d;
+  color: #3f0018;
   background: var(--green-bright);
   font-size: 11px;
   font-weight: 500;
