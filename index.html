@@ -89,12 +89,27 @@
             <p>
               A successful write survives a restart. A document and its index
               entries change together, so a query does not see half of an
-              update. Document bodies are protected at rest, but names, IDs,
-              indexed values, and record sizes are not hidden.
+              update.
             </p>
             <p>
               Requests and query work have fixed bounds. An expensive query
               stops instead of consuming unlimited time or memory.
+            </p>
+          </div>
+        </section>
+
+        <section class="design-section">
+          <h3>Document encryption</h3>
+          <div>
+            <p>
+              Document bodies are encrypted before they reach storage. The
+              server needs a secret key kept outside the data directory. Losing
+              that key makes the documents unreadable.
+            </p>
+            <p>
+              Encryption does not hide everything. Database names, document
+              IDs, index definitions, indexed values, and record sizes remain
+              visible because the database needs them to find and order data.
             </p>
           </div>
         </section>
