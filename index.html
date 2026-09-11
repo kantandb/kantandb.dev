@@ -103,7 +103,7 @@
         </div>
       </section>
 
-      <section class="later">
+      <section class="plan">
         <div class="section-heading">
           <p class="section-number">02 / 03</p>
           <div>
@@ -112,20 +112,38 @@
           </div>
         </div>
 
-        <div class="later-copy">
-          <p>
-            Documents, database metadata, and index entries share a local
-            ordered key-value store. Synchronous batches make related changes
-            atomic and durable. Striped locks coordinate concurrent writes and
-            keep database deletion from racing with them.
-          </p>
-          <p class="plain-note">
-            One process and one local data directory.
-          </p>
+        <div class="feature-grid">
+          <article class="feature feature-main">
+            <p class="feature-label">Local storage</p>
+            <h3>Atomic batches and coordinated writes</h3>
+            <p>
+              Documents, database metadata, and index entries share a local
+              ordered key-value store. Synchronous batches make related changes
+              atomic and durable. Striped locks coordinate concurrent writes
+              and keep database deletion from racing with them.
+            </p>
+            <ul class="tags" aria-label="Storage features">
+              <li>Ordered keys</li>
+              <li>Sync batches</li>
+              <li>Striped locks</li>
+            </ul>
+          </article>
+
+          <article class="feature flow-card" aria-label="Storage flow">
+            <p class="feature-label">Storage flow</p>
+            <div class="flow">
+              <span>Write</span>
+              <i aria-hidden="true">→</i>
+              <span>Batch</span>
+              <i aria-hidden="true">→</i>
+              <span>Store</span>
+            </div>
+            <p class="flow-note">One process and one local data directory.</p>
+          </article>
         </div>
       </section>
 
-      <section class="later">
+      <section class="plan">
         <div class="section-heading">
           <p class="section-number">03 / 03</p>
           <div>
@@ -134,15 +152,34 @@
           </div>
         </div>
 
-        <div class="later-copy">
-          <p>
-            Databases define secondary indexes with JSON Pointer paths. Queries
-            support scalar equality and ordered number or string comparisons.
-            Results are paginated, with opaque cursors for indexed queries.
-          </p>
-          <p class="plain-note">
-            This is an experiment, not a production database.
-          </p>
+        <div class="feature-grid">
+          <article class="feature feature-main">
+            <p class="feature-label">Secondary indexes</p>
+            <h3>Scalar filters and cursor pagination</h3>
+            <p>
+              Databases define secondary indexes with JSON Pointer paths.
+              Queries support scalar equality and ordered number or string
+              comparisons. Results are paginated, with opaque cursors for
+              indexed queries.
+            </p>
+            <ul class="tags" aria-label="Query features">
+              <li>Equality</li>
+              <li>Range filters</li>
+              <li>Opaque cursors</li>
+            </ul>
+          </article>
+
+          <article class="feature flow-card" aria-label="Query flow">
+            <p class="feature-label">Query flow</p>
+            <div class="flow">
+              <span>Query</span>
+              <i aria-hidden="true">→</i>
+              <span>Index</span>
+              <i aria-hidden="true">→</i>
+              <span>Page</span>
+            </div>
+            <p class="flow-note">This is an experiment, not a production database.</p>
+          </article>
         </div>
       </section>
     </main>
