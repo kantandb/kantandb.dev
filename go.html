@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Notes on the current Go implementation of KantanDB.">
+    <meta name="theme-color" content="#f4f1e8">
+
+    <title>Go implementation — KantanDB</title>
+
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="KantanDB home">
+        <img src="./logo.png" alt="" aria-hidden="true">
+        <span>KantanDB</span>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <a href="./">Database design</a>
+        <a aria-current="page" href="./go.html">Go implementation</a>
+        <a href="https://github.com/kantandb/prototype">Prototype source <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <header class="page-intro detail-intro">
+        <p class="label"><a href="./">KantanDB</a> / current implementation</p>
+        <h1>Go</h1>
+        <p class="summary">
+          The Go prototype implements the current database design as one HTTP
+          service backed by a local Pebble store.
+        </p>
+        <p>
+          It is the reference implementation for now. Storage formats are still
+          unstable and may be replaced while the project is taking shape.
+        </p>
+        <p class="source-line">
+          <a class="text-link" href="https://github.com/kantandb/prototype">Browse the prototype source →</a>
+        </p>
+      </header>
+
+      <article>
+        <section class="detail-section">
+          <div class="section-title">
+            <p class="section-number">01</p>
+            <h2>HTTP interface</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              The service creates named databases and accepts document CRUD
+              requests. It generates UUIDv7 document IDs and exposes revisions
+              as ETags. Replacement, patch, and deletion can use
+              <code>If-Match</code> to reject a stale revision.
+            </p>
+            <p>
+              Patches support JSON Merge Patch and JSON Patch. The HTTP layer
+              validates names and documents, limits body size, returns one JSON
+              error shape, and shuts down gracefully.
+            </p>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <div class="section-title">
+            <p class="section-number">02</p>
+            <h2>Storage</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              Pebble holds every logical database in one ordered local store.
+              Documents, database metadata, index definitions, and index
+              entries occupy separate key ranges. Synchronous batches update a
+              document and its indexes atomically and durably.
+            </p>
+            <p>
+              Striped locks coordinate concurrent document writes. Database
+              deletion takes the corresponding database lock so that it cannot
+              race with those writes.
+            </p>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <div class="section-title">
+            <p class="section-number">03</p>
+            <h2>Encryption</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              The server requires a base64-encoded 256-bit master key in a file
+              outside the data directory. It derives a store wrapping key and
+              uses it to protect a random key for each database.
+            </p>
+            <p>
+              Document JSON is compressed with Zstandard, then encrypted and
+              authenticated with AES-256-GCM. Per-document keys are derived with
+              HKDF-SHA256. Cursor keys are derived separately. The key and
+              record layout authenticate stored data but do not hide database
+              names, IDs, indexed values, or record sizes.
+            </p>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <div class="section-title">
+            <p class="section-number">04</p>
+            <h2>Indexes</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              Indexes are declared when a database is created. Each one maps a
+              JSON Pointer path to ordered Pebble keys containing the encoded
+              field value and document ID.
+            </p>
+            <p>
+              Equality accepts any JSON scalar. Ordered comparisons accept
+              numbers and strings without coercion. Number encoding preserves
+              exact JSON numeric order; strings use binary UTF-8 order. Query
+              pages return document IDs and opaque authenticated cursors.
+            </p>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <div class="section-title">
+            <p class="section-number">05</p>
+            <h2>JSONPath queries</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              <code>QUERY /{database}</code> accepts RFC 9535 JSONPath in a JSON
+              request body. A document matches when any scalar selected by the
+              path satisfies the comparison.
+            </p>
+            <p>
+              A simple path uses a matching declared index when it is safe to
+              do so. Other paths scan documents in ID order. Each page may scan
+              at most 10,000 documents, each request has a five-second deadline,
+              and path size, nesting, selectors, and evaluated document nodes
+              are bounded.
+            </p>
+          </div>
+        </section>
+      </article>
+
+      <nav class="page-nav" aria-label="Page navigation">
+        <a href="./">← Back to database design</a>
+        <a href="https://github.com/kantandb/prototype">View source ↗</a>
+      </nav>
+    </main>
+
+    <footer>
+      <span>KantanDB</span>
+      <span>Go implementation notes</span>
+    </footer>
+  </body>
+</html>

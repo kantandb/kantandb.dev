@@ -3,190 +3,135 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="KantanDB is a small JSON document database built as a Rust learning project.">
+    <meta name="description" content="KantanDB is an educational JSON document database, implemented first in Go and later in Rust.">
     <meta name="theme-color" content="#f4f1e8">
 
-    <title>KantanDB — a document database built to learn Rust</title>
+    <title>KantanDB</title>
 
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="/" aria-label="KantanDB home">
-        <img class="brand-mark" src="./logo.png" alt="" aria-hidden="true">
+      <a class="brand" href="./" aria-label="KantanDB home">
+        <img src="./logo.png" alt="" aria-hidden="true">
         <span>KantanDB</span>
       </a>
 
-      <a class="source-link" href="https://github.com/kantandb/kantandb.dev">
-        View on GitHub
-        <span aria-hidden="true">↗</span>
-      </a>
+      <nav aria-label="Main navigation">
+        <a href="#design">Database design</a>
+        <a href="./go.html">Go implementation</a>
+        <a href="https://github.com/kantandb/kantandb.dev">Source <span aria-hidden="true">↗</span></a>
+      </nav>
     </header>
 
     <main>
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow"><span></span> Rust learning project</p>
-          <h1>A small database for <em>JSON documents.</em></h1>
-          <p class="lede">
-            KantanDB is a small learning project where I can build a document
-            database and get more comfortable with Rust.
+      <header class="page-intro">
+        <p class="label">Educational project</p>
+        <h1>KantanDB</h1>
+        <p class="summary">
+          I am building the same small JSON document database in more than one
+          language. The Go version comes first. A Rust port will follow once
+          the design settles, and other versions may come later.
+        </p>
+        <p>
+          Holding the database behavior steady makes the implementation
+          differences easier to study. Each port is a practical exercise in a
+          language rather than a new database design.
+        </p>
+        <p class="note">This is an experiment, not a production database.</p>
+      </header>
+
+      <article id="design">
+        <header class="article-header">
+          <p class="label">Shared across implementations</p>
+          <h2>Database design</h2>
+          <p>
+            These are the intended user-visible rules. Implementation details
+            belong to each language version.
           </p>
+        </header>
 
-          <div class="hero-actions">
-            <a class="button button-primary" href="https://github.com/kantandb/prototype">
-              View the prototype
-            </a>
-            <a class="button button-quiet" href="#design">See the design</a>
-          </div>
-        </div>
-
-        <div class="preview" aria-label="Document interface example">
-          <div class="preview-bar">
-            <span>current interface</span>
-            <span class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          </div>
-
-          <div class="request">
-            <span class="method">POST</span>
-            <span>/notes/</span>
-          </div>
-
-          <pre><code>{
-  <span class="code-key">"title"</span>: <span class="code-value">"Read the Rust book"</span>,
-  <span class="code-key">"done"</span>: <span class="code-bool">false</span>
-}</code></pre>
-
-          <div class="response">
-            <span><b>201</b> Created</span>
-            <span>ETag: <code>"012345…cdef"</code></span>
-          </div>
-        </div>
-      </section>
-
-      <section class="plan" id="design">
-        <div class="section-heading">
-          <p class="section-number">01 / 03</p>
+        <section class="design-section">
+          <h3>Databases and documents</h3>
           <div>
-            <p class="kicker">HTTP document API</p>
-            <h2>Work with JSON documents.</h2>
-          </div>
-        </div>
-
-        <div class="feature-grid">
-          <article class="feature feature-main">
-            <p class="feature-label">Document operations</p>
-            <h3>Named databases and revision checks</h3>
             <p>
-              The server assigns UUIDv7 IDs and supports document creation,
-              reads, replacement, patches, and deletion. ETags and
-              <code>If-Match</code> reject stale writes.
+              KantanDB groups JSON documents into named databases. A document
+              is always a JSON object. The server assigns its permanent ID and
+              keeps a revision that changes after every update.
             </p>
-            <ul class="tags" aria-label="Document features">
-              <li>ETags</li>
-              <li>JSON Merge Patch</li>
-              <li>JSON Patch</li>
-            </ul>
-          </article>
+            <p>
+              Clients can create, read, replace, patch, and delete documents.
+              They can include the revision with a change so that an older copy
+              cannot accidentally overwrite a newer one.
+            </p>
+          </div>
+        </section>
 
-          <article class="feature flow-card" aria-label="Request flow">
-            <p class="feature-label">Request flow</p>
-            <div class="flow">
-              <span>HTTP</span>
-              <i aria-hidden="true">→</i>
-              <span>Validate</span>
-              <i aria-hidden="true">→</i>
-              <span>Store</span>
-            </div>
-            <p class="flow-note">Strict routes, bounded bodies, and consistent JSON errors.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="plan">
-        <div class="section-heading">
-          <p class="section-number">02 / 03</p>
+        <section class="design-section">
+          <h3>Indexes and queries</h3>
           <div>
-            <p class="kicker">Storage and concurrency</p>
-            <h2>Keep related changes together.</h2>
-          </div>
-        </div>
-
-        <div class="feature-grid">
-          <article class="feature feature-main">
-            <p class="feature-label">Local storage</p>
-            <h3>Atomic batches and coordinated writes</h3>
             <p>
-              Documents, database metadata, and index entries share a local
-              ordered key-value store. Synchronous batches make related changes
-              atomic and durable. Striped locks coordinate concurrent writes
-              and keep database deletion from racing with them.
+              A database may define indexes over fields used often in queries.
+              Queries can test scalar values for equality or compare numbers
+              and strings by order.
             </p>
-            <ul class="tags" aria-label="Storage features">
-              <li>Ordered keys</li>
-              <li>Sync batches</li>
-              <li>Striped locks</li>
-            </ul>
-          </article>
+            <p>
+              JSONPath handles queries that do not fit a declared index. Query
+              results contain document IDs and are split into pages. A cursor
+              continues the same query from the previous page.
+            </p>
+          </div>
+        </section>
 
-          <article class="feature flow-card" aria-label="Storage flow">
-            <p class="feature-label">Storage flow</p>
-            <div class="flow">
-              <span>Write</span>
-              <i aria-hidden="true">→</i>
-              <span>Batch</span>
-              <i aria-hidden="true">→</i>
-              <span>Store</span>
-            </div>
-            <p class="flow-note">One process and one local data directory.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="plan">
-        <div class="section-heading">
-          <p class="section-number">03 / 03</p>
+        <section class="design-section">
+          <h3>Persistence and limits</h3>
           <div>
-            <p class="kicker">Indexes and queries</p>
-            <h2>Query indexed JSON fields.</h2>
+            <p>
+              A successful write survives a restart. A document and its index
+              entries change together, so a query does not see half of an
+              update. Document bodies are protected at rest, but names, IDs,
+              indexed values, and record sizes are not hidden.
+            </p>
+            <p>
+              Requests and query work have fixed bounds. An expensive query
+              stops instead of consuming unlimited time or memory.
+            </p>
           </div>
+        </section>
+      </article>
+
+      <section class="implementations">
+        <header class="article-header">
+          <p class="label">Language versions</p>
+          <h2>Implementations</h2>
+        </header>
+
+        <div class="implementation-row">
+          <div>
+            <p class="status current">Current</p>
+            <h3>Go</h3>
+          </div>
+          <p>
+            The working prototype is a single-process HTTP service with durable
+            storage, encryption, indexes, and JSONPath queries.
+          </p>
+          <a class="text-link" href="./go.html">Read the Go implementation notes →</a>
         </div>
 
-        <div class="feature-grid">
-          <article class="feature feature-main">
-            <p class="feature-label">Secondary indexes</p>
-            <h3>Scalar filters and cursor pagination</h3>
-            <p>
-              Databases define secondary indexes with JSON Pointer paths.
-              Queries support scalar equality and ordered number or string
-              comparisons. Results are paginated, with opaque cursors for
-              indexed queries.
-            </p>
-            <ul class="tags" aria-label="Query features">
-              <li>Equality</li>
-              <li>Range filters</li>
-              <li>Opaque cursors</li>
-            </ul>
-          </article>
-
-          <article class="feature flow-card" aria-label="Query flow">
-            <p class="feature-label">Query flow</p>
-            <div class="flow">
-              <span>Query</span>
-              <i aria-hidden="true">→</i>
-              <span>Index</span>
-              <i aria-hidden="true">→</i>
-              <span>Page</span>
-            </div>
-            <p class="flow-note">This is an experiment, not a production database.</p>
-          </article>
+        <div class="implementation-row planned">
+          <div>
+            <p class="status">Planned</p>
+            <h3>Rust</h3>
+          </div>
+          <p>The Rust port will start after the Go design settles.</p>
+          <span></span>
         </div>
       </section>
     </main>
 
     <footer>
       <span>KantanDB</span>
-      <span>Built slowly, to learn properly.</span>
+      <span>Source and notes on <a href="https://github.com/kantandb/kantandb.dev">GitHub</a>.</span>
     </footer>
   </body>
 </html>
