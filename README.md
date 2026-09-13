@@ -18,7 +18,7 @@ Documents and their index entries change together and persist across restarts. D
 
 ## Go implementation
 
-The current [Go prototype](https://github.com/kantandb/prototype) is a single-process HTTP service backed by Pebble. It uses UUIDv7 document IDs, ETags for revisions, synchronous batches for atomic durable writes, and striped locks to coordinate concurrent mutations and database deletion.
+The current [Go prototype](https://github.com/kantandb/server-go) is a single-process HTTP service backed by Pebble. It uses UUIDv7 document IDs, ETags for revisions, synchronous batches for atomic durable writes, and striped locks to coordinate concurrent mutations and database deletion.
 
 Document JSON is compressed with Zstandard and encrypted with AES-256-GCM before reaching Pebble. A required master key wraps a separate key for each database; derived keys protect documents and authenticated query cursors.
 
