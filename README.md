@@ -18,11 +18,19 @@ Documents and their index entries change together and persist across restarts. D
 
 ## Go implementation
 
-The current [Go prototype](https://github.com/kantandb/server-go) is a single-process HTTP service backed by Pebble. It uses UUIDv7 document IDs, ETags for revisions, synchronous batches for atomic durable writes, and striped locks to coordinate concurrent mutations and database deletion.
+The [Go server](https://github.com/kantandb/server-go) is a single-process HTTP service backed by Pebble and Go's `net/http` package.
+
+Its API routes live under `/db`, while `GET /` reports the service name and build version. See the [OpenAPI 3.2 contract](https://github.com/kantandb/server-go/blob/main/openapi.yaml) for the complete interface.
+
+The server uses UUIDv7 document IDs, ETags for revisions, synchronous batches for atomic durable writes, and striped locks to coordinate concurrent mutations and database deletion.
 
 Document JSON is compressed with Zstandard and encrypted with AES-256-GCM before reaching Pebble. A required master key wraps a separate key for each database; derived keys protect documents and authenticated query cursors.
 
-Declared indexes use JSON Pointer paths. Indexed queries scan ordered Pebble keys, while `QUERY /{database}` accepts RFC 9535 JSONPath. Simple paths use a matching index when possible; other paths scan encrypted documents in ID order. Request size, path complexity, scan work, document evaluation, and execution time are bounded.
+Declared indexes use JSON Pointer paths. Indexed queries scan ordered Pebble keys, while `QUERY /db/{database}` accepts RFC 9535 JSONPath. Simple paths use a matching index when possible; other paths scan encrypted documents in ID order. Request size, path complexity, scan work, document evaluation, and execution time are bounded.
+
+Bulk endpoints export a consistent Pebble snapshot as NDJSON and import documents atomically with new IDs and revisions. Imports rebuild the target database's index entries. Operators can limit transfer size, document count, batch size, duration, and concurrency. Bulk transfer omits database metadata, original IDs and revisions, ETags, and encryption keys, so it is not backup and restore.
+
+The Go server is licensed under the [Apache License 2.0](https://github.com/kantandb/server-go/blob/main/LICENSE).
 
 ## Rust implementation
 

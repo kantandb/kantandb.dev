@@ -29,14 +29,9 @@
         <p class="label">Educational project</p>
         <h1>KantanDB</h1>
         <p class="summary">
-          I am building the same small JSON document database in more than one
-          language. The Go version comes first. A Rust port will follow once
-          the design settles, and other versions may come later.
-        </p>
-        <p>
-          Holding the database behavior steady makes the implementation
-          differences easier to study. Each port is a practical exercise in a
-          language rather than a new database design.
+          I am building the same small JSON document database first in Go, then
+          in Rust. Keeping the design fixed makes the implementations easier to
+          compare.
         </p>
         <p class="note">This is an experiment, not a production database.</p>
       </header>
@@ -127,8 +122,8 @@
             <h3>Go</h3>
           </div>
           <p>
-            The working prototype is a single-process HTTP service with durable
-            storage, encryption, indexes, and JSONPath queries.
+            The Go version is a single-process HTTP service with durable
+            storage, encryption, indexes, JSONPath queries, and bulk transfer.
           </p>
           <a class="text-link" href="./go.html">Read the Go implementation notes →</a>
         </div>
