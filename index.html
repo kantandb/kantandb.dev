@@ -18,9 +18,8 @@
       </a>
 
       <nav aria-label="Main navigation">
-        <a href="#design">Database design</a>
+        <a aria-current="page" href="#design">Database design</a>
         <a href="./go.html">Go implementation</a>
-        <a href="https://github.com/kantandb/kantandb.dev">Source <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
 
@@ -35,9 +34,6 @@
       <article id="design">
         <header class="article-header">
           <h2>Database design</h2>
-          <p>
-            These rules apply to every implementation.
-          </p>
         </header>
 
         <section class="design-section">
@@ -88,9 +84,8 @@
             <h3>Go</h3>
           </div>
           <p>
-            The Go version is a single-process HTTP service built with net/http, storage on top of Pebble, and AES-256-GCM encryption.
+            The Go version uses net/http to serve requests, Pebble for storage, and AES-256-GCM to encrypt documents.
           </p>
-          <a class="text-link" href="./go.html">Implementation notes →</a>
         </div>
 
         <div class="implementation-row planned">
@@ -101,14 +96,13 @@
           <p>
             Work on Rust port will start soon.
           </p>
-          <span></span>
         </div>
       </section>
     </main>
 
     <footer>
       <span>KantanDB</span>
-      <span>Source and notes on <a href="https://github.com/kantandb/kantandb.dev">GitHub</a>.</span>
+      <span>Source on <a href="https://github.com/kantandb/kantandb.dev">GitHub</a></span>
     </footer>
   </body>
 </html>

@@ -20,7 +20,6 @@
       <nav aria-label="Main navigation">
         <a href="./">Database design</a>
         <a aria-current="page" href="./go.html">Go implementation</a>
-        <a href="https://github.com/kantandb/server-go">Server source <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
 
@@ -28,20 +27,18 @@
       <header class="page-intro detail-intro">
         <h1>Go</h1>
         <p class="summary">
-          The Go server implements the current database design as one HTTP service backed by a local Pebble store.
-        </p>
-        <p class="source-line">
-          <a class="text-link" href="https://github.com/kantandb/server-go">Browse the source →</a>
+          The Go server implementation on top of Pebble.
         </p>
       </header>
 
-      <article>
-        <section class="detail-section">
-          <div class="section-title">
-            <p class="section-number">01</p>
-            <h2>HTTP interface</h2>
-          </div>
-          <div class="section-copy">
+      <article class="numbered-sections">
+        <header class="article-header">
+          <h2>Implementation details</h2>
+        </header>
+
+        <section class="design-section">
+          <h3>HTTP interface</h3>
+          <div>
             <p>
               The service creates named databases and accepts document CRUD requests. It generates UUIDv7 document IDs and exposes revisions as ETags. Replacement, patch, and deletion can use <code>If-Match</code> to reject a stale revision.
             </p>
@@ -54,12 +51,9 @@
           </div>
         </section>
 
-        <section class="detail-section">
-          <div class="section-title">
-            <p class="section-number">02</p>
-            <h2>Storage</h2>
-          </div>
-          <div class="section-copy">
+        <section class="design-section">
+          <h3>Storage</h3>
+          <div>
             <p>
               Pebble holds every logical database in one ordered local store. Documents, database metadata, index definitions, and index entries occupy separate key ranges. Synchronous batches update a document and its indexes atomically and durably.
             </p>
@@ -69,12 +63,9 @@
           </div>
         </section>
 
-        <section class="detail-section">
-          <div class="section-title">
-            <p class="section-number">03</p>
-            <h2>Encryption</h2>
-          </div>
-          <div class="section-copy">
+        <section class="design-section">
+          <h3>Encryption</h3>
+          <div>
             <p>
               The server requires a base64-encoded 256-bit master key in a file outside the data directory. It derives a store wrapping key and uses it to protect a random key for each database.
             </p>
@@ -84,24 +75,18 @@
           </div>
         </section>
 
-        <section class="detail-section">
-          <div class="section-title">
-            <p class="section-number">04</p>
-            <h2>Indeces</h2>
-          </div>
-          <div class="section-copy">
+        <section class="design-section">
+          <h3>Indeces</h3>
+          <div>
             <p>
               Indeces are declared when a database is created. Each one maps a JSON Pointer path to ordered Pebble keys containing the encoded field value and document ID.
             </p>
           </div>
         </section>
 
-        <section class="detail-section">
-          <div class="section-title">
-            <p class="section-number">05</p>
-            <h2>JSONPath queries</h2>
-          </div>
-          <div class="section-copy">
+        <section class="design-section">
+          <h3>JSONPath queries</h3>
+          <div>
             <p>
               <code>QUERY /db/{database}</code> accepts RFC 9535 JSONPath in a JSON request body. A document matches when any scalar selected by the path satisfies the comparison.
             </p>
@@ -111,12 +96,9 @@
           </div>
         </section>
 
-        <section class="detail-section">
-          <div class="section-title">
-            <p class="section-number">06</p>
-            <h2>Bulk transfer</h2>
-          </div>
-          <div class="section-copy">
+        <section class="design-section">
+          <h3>Bulk transfer</h3>
+          <div>
             <p>
               <code>GET /bulk/{database}</code> streams documents as NDJSON from a consistent Pebble snapshot. <code>POST /bulk/{database}</code> imports them with new UUIDv7 IDs and revisions, rebuilds the target database's index entries, and commits atomically.
             </p>
@@ -127,15 +109,11 @@
         </section>
       </article>
 
-      <nav class="page-nav" aria-label="Page navigation">
-        <a href="./">← Back to database design</a>
-        <a href="https://github.com/kantandb/server-go">View source ↗</a>
-      </nav>
     </main>
 
     <footer>
       <span>KantanDB</span>
-      <span>Go server · <a href="https://github.com/kantandb/server-go/blob/main/LICENSE">Apache 2.0</a></span>
+      <span>Source on <a href="https://github.com/kantandb/kantandb.dev">GitHub</a></span>
     </footer>
   </body>
 </html>

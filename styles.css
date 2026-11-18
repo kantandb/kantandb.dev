@@ -84,10 +84,14 @@ footer {
   color: var(--accent);
 }
 
+/* Mark the current page without relying on color alone. */
+.site-header nav a[aria-current="page"] {
+  text-decoration: underline;
+}
+
 .page-intro {
-  max-width: 920px;
-  margin-inline: auto;
-  padding: 132px 0 144px;
+  margin-inline: 64px;
+  padding: 32px 0 40px;
   text-align: left;
 }
 
@@ -97,6 +101,7 @@ footer {
   margin: 0;
   color: var(--clay);
   font-size: 11px;
+  line-height: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -125,8 +130,8 @@ h3 {
 }
 
 h1 {
-  margin: 22px 0 30px;
-  font-size: clamp(68px, 11vw, 118px);
+  margin: 0 0 16px;
+  font-size: clamp(48px, 6vw, 72px);
   letter-spacing: -0.055em;
   line-height: 0.9;
 }
@@ -144,7 +149,7 @@ h1 {
   margin: 0;
   color: var(--accent);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(25px, 3vw, 36px);
+  font-size: clamp(18px, 2vw, 22px);
   line-height: 1.35;
 }
 
@@ -154,12 +159,12 @@ main > article,
 }
 
 .article-header {
-  padding: 76px 64px 60px;
+  padding: 40px 64px 32px;
 }
 
 .article-header h2 {
-  margin: 18px 0 16px;
-  font-size: clamp(42px, 5vw, 62px);
+  margin: 0 0 16px;
+  font-size: clamp(30px, 3.5vw, 40px);
   letter-spacing: -0.04em;
   line-height: 1;
 }
@@ -173,16 +178,17 @@ main > article,
 }
 
 .design-section,
-.detail-section {
+.implementation-row {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: 64px;
   margin: 0 64px;
-  padding: 48px 0 54px;
+  padding: 32px 0;
   border-top: 1px solid var(--line);
 }
 
-#design {
+#design,
+.numbered-sections {
   background: var(--paper);
   counter-reset: design-section;
 }
@@ -206,12 +212,12 @@ main > article,
   content: counter(design-section, decimal-leading-zero);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
+  line-height: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
 }
 
 .design-section p,
-.section-copy p,
 .implementation-row > p {
   margin: 0;
   color: var(--muted);
@@ -219,20 +225,20 @@ main > article,
   line-height: 1.75;
 }
 
-.design-section p + p,
-.section-copy p + p {
+/* Align descriptions with headings below numbers or status labels. */
+.design-section > div,
+.implementation-row > p {
+  padding-top: 30px;
+}
+
+.design-section p + p {
   margin-top: 22px;
 }
 
 .implementations {
   margin-top: 32px;
-  margin-bottom: 112px;
   color: #f4f1e9;
   background: var(--forest);
-}
-
-.implementations .article-header {
-  padding-bottom: 50px;
 }
 
 .implementations .label,
@@ -242,17 +248,11 @@ main > article,
 }
 
 .implementation-row {
-  display: grid;
-  grid-template-columns: 180px minmax(0, 1fr) 230px;
-  gap: 40px;
-  align-items: start;
-  margin: 0 64px;
-  padding: 40px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.2);
 }
 
 .implementation-row .status {
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   color: var(--forest-muted);
 }
 
@@ -275,40 +275,8 @@ main > article,
   text-decoration: underline;
 }
 
-.detail-intro {
-  padding-bottom: 112px;
-}
-
 .source-line {
   margin-top: 32px;
-}
-
-body:has(.detail-intro) main > article {
-  background: var(--paper);
-}
-
-.detail-section {
-  grid-template-columns: 280px minmax(0, 1fr);
-  gap: 64px;
-  padding-block: 58px;
-}
-
-.section-title {
-  display: grid;
-  grid-template-columns: 30px 1fr;
-  gap: 14px;
-  align-items: baseline;
-}
-
-.section-title h2 {
-  margin: 0;
-  font-size: 26px;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-}
-
-.section-number {
-  color: var(--clay);
 }
 
 code {
@@ -374,29 +342,24 @@ a:focus-visible {
   }
 
   .page-intro {
-    padding: 96px 16px 104px;
+    margin-inline: 32px;
   }
 
   .article-header {
-    padding: 56px 32px 42px;
+    padding: 32px 32px 26px;
   }
 
   .design-section,
-  .detail-section {
+  .implementation-row {
     grid-template-columns: 1fr;
     gap: 26px;
     margin-inline: 32px;
-    padding-block: 40px;
+    padding-block: 28px;
   }
 
-  .implementation-row {
-    grid-template-columns: 120px minmax(0, 1fr);
-    gap: 28px;
-    margin-inline: 32px;
-  }
-
-  .implementation-row .text-link {
-    grid-column: 2;
+  .design-section > div,
+  .implementation-row > p {
+    padding-top: 0;
   }
 }
 
@@ -407,35 +370,21 @@ a:focus-visible {
     width: min(100% - 32px, 1120px);
   }
 
-  h1 {
-    font-size: 62px;
-  }
-
-  .summary {
-    font-size: 24px;
-  }
-
-  .article-header {
-    padding: 46px 22px 36px;
-  }
-
-  .article-header h2 {
-    font-size: 40px;
-  }
-
-  .design-section,
-  .detail-section,
-  .implementation-row {
+  .page-intro {
     margin-inline: 22px;
   }
 
-  .implementation-row {
-    grid-template-columns: 1fr;
-    gap: 18px;
+  .article-header {
+    padding: 28px 22px 24px;
   }
 
-  .implementation-row .text-link {
-    grid-column: 1;
+  .article-header h2 {
+    font-size: 30px;
+  }
+
+  .design-section,
+  .implementation-row {
+    margin-inline: 22px;
   }
 
   .page-nav,

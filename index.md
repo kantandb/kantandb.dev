@@ -14,9 +14,8 @@ Accessible label: KantanDB home
 
 ## Main navigation
 
-- [Database design](#design)
+- [Database design](#design) (current page)
 - [Go implementation](./go.html)
-- [Source ↗](https://github.com/kantandb/kantandb.dev)
 
 ## KantanDB
 
@@ -25,8 +24,6 @@ A small JSON document database.
 # Main article: Database design
 
 Anchor: `design`
-
-These rules apply to every implementation.
 
 ## Databases and documents
 
@@ -50,9 +47,7 @@ Document bodies are encrypted before they reach storage.
 
 Status: Current
 
-The Go version is a single-process HTTP service built with net/http, storage on top of Pebble, and AES-256-GCM encryption.
-
-[Implementation notes →](./go.html)
+The Go version uses net/http to serve requests, Pebble for storage, and AES-256-GCM to encrypt documents.
 
 ## Rust
 
@@ -64,4 +59,4 @@ Work on Rust port will start soon.
 
 KantanDB
 
-Source and notes on [GitHub](https://github.com/kantandb/kantandb.dev).
+Source on [GitHub](https://github.com/kantandb/kantandb.dev)
