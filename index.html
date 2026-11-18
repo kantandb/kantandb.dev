@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A small JSON document database written in Go and ported to Rust.">
+    <meta name="description" content="A small JSON document database.">
     <meta name="theme-color" content="#f3f0e8">
 
     <title>KantanDB</title>
@@ -26,20 +26,17 @@
 
     <main>
       <header class="page-intro">
-        <p class="label">Educational project</p>
         <h1>KantanDB</h1>
         <p class="summary">
-          A small JSON document database written in Go and ported to Rust.
+          A small JSON document database.
         </p>
       </header>
 
       <article id="design">
         <header class="article-header">
-          <p class="label">Shared across implementations</p>
           <h2>Database design</h2>
           <p>
-            These rules apply to every implementation. Language-specific
-            details are documented separately.
+            These rules apply to every implementation.
           </p>
         </header>
 
@@ -47,14 +44,7 @@
           <h3>Databases and documents</h3>
           <div>
             <p>
-              KantanDB groups JSON documents into named databases. A document
-              is always a JSON object. The server assigns its permanent ID and
-              keeps a revision that changes after every update.
-            </p>
-            <p>
-              Clients can create, read, replace, patch, and delete documents.
-              They can include the revision with a change so that an older copy
-              cannot accidentally overwrite a newer one.
+              KantanDB groups JSON documents into named databases. A document is always a JSON object.
             </p>
           </div>
         </section>
@@ -63,45 +53,25 @@
           <h3>Indexes and queries</h3>
           <div>
             <p>
-              A database may define indexes over fields used often in queries.
-              Queries can test scalar values for equality or compare numbers
-              and strings by order.
-            </p>
-            <p>
-              JSONPath handles queries that do not fit a declared index. Query
-              results contain document IDs and are split into pages. A cursor
-              continues the same query from the previous page.
+              A database may define indexes over fields used often in queries. JSONPath handles queries that do not fit a declared index.
             </p>
           </div>
         </section>
 
         <section class="design-section">
-          <h3>Persistence and limits</h3>
+          <h3>Persistence</h3>
           <div>
             <p>
-              A successful write survives a restart. A document and its index
-              entries change together, so a query does not see half of an
-              update.
-            </p>
-            <p>
-              Requests and query work have fixed bounds. An expensive query
-              stops instead of consuming unlimited time or memory.
+              A successful write survives a restart. A document and its index entries change together, so a query does not see half of an update.
             </p>
           </div>
         </section>
 
         <section class="design-section">
-          <h3>Document encryption</h3>
+          <h3>Encryption</h3>
           <div>
             <p>
-              Document bodies are encrypted before they reach storage. The
-              server needs a secret key kept outside the data directory. Losing
-              that key makes the documents unreadable.
-            </p>
-            <p>
-              Encryption does not hide everything. Database names, document
-              IDs, index definitions, indexed values, and record sizes remain
-              visible because the database needs them to find and order data.
+              Document bodies are encrypted before they reach storage.
             </p>
           </div>
         </section>
@@ -109,7 +79,6 @@
 
       <section class="implementations">
         <header class="article-header">
-          <p class="label">Language versions</p>
           <h2>Implementations</h2>
         </header>
 
@@ -119,10 +88,9 @@
             <h3>Go</h3>
           </div>
           <p>
-            The Go version is a single-process HTTP service with durable
-            storage, encryption, indexes, JSONPath queries, and bulk transfer.
+            The Go version is a single-process HTTP service built with net/http, storage on top of Pebble, and AES-256-GCM encryption.
           </p>
-          <a class="text-link" href="./go.html">Read the Go implementation notes →</a>
+          <a class="text-link" href="./go.html">Implementation notes →</a>
         </div>
 
         <div class="implementation-row planned">
@@ -130,7 +98,9 @@
             <p class="status">Planned</p>
             <h3>Rust</h3>
           </div>
-          <p>The Rust port will start after the Go design settles.</p>
+          <p>
+            Work on Rust port will start soon.
+          </p>
           <span></span>
         </div>
       </section>
