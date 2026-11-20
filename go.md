@@ -29,7 +29,7 @@ The service creates named databases and accepts document CRUD requests. It gener
 
 Patches support JSON Merge Patch and JSON Patch. Routes use Go's `net/http` package and live under `/db`.
 
-The HTTP layer validates names and documents, limits body size, uses a consistent JSON error format. See the [OpenAPI 3.2 specs](https://github.com/kantandb/server-go/blob/main/openapi.yaml) for the complete interface.
+See the [OpenAPI 3.2 specs](https://github.com/kantandb/server-go/blob/main/openapi.yaml) for the complete interface.
 
 ## Storage
 
@@ -43,21 +43,23 @@ The server requires a base64-encoded 256-bit master key in a file outside the da
 
 Document JSON is compressed with Zstandard, then encrypted and authenticated with AES-256-GCM. Per-document keys are derived with HKDF-SHA256. Cursor keys are derived separately.
 
-## Indeces
+## Indices
 
-Indeces are declared when a database is created. Each one maps a JSON Pointer path to ordered Pebble keys containing the encoded field value and document ID.
+Indices are declared when a database is created. Each one maps a JSON Pointer path to ordered Pebble keys containing the encoded field value and document ID.
 
-## JSONPath queries
+## jq queries
 
-`QUERY /db/{database}` accepts RFC 9535 JSONPath in a JSON request body. A document matches when any scalar selected by the path satisfies the comparison.
+`QUERY /db/{database}` accepts a raw jq queries as plain text. The server uses gojq to filter and transform documents from one Pebble snapshot.
 
-A simple path uses a matching declared index when it is safe to do so. Other paths scan documents in ID order.
+The default response is a JSON array with `application/x-ndjson` switching to NDJSON streams.
+
+`Limit` and `Cursor` headers allows for pagination.
 
 ## Bulk transfer
 
-`GET /bulk/{database}` streams documents as NDJSON from a consistent Pebble snapshot. `POST /bulk/{database}` imports them with new UUIDv7 IDs and revisions, rebuilds the target database's index entries, and commits atomically.
+Export done with '.' over `QUERY /db/{database}` and `Accept: application/x-ndjson` for streams.
 
-Operators can limit transfer size, document count, Pebble batch size, duration, and concurrency.
+Same stream can be imported with `POST /db/{database}` and `Content-Type: application/x-ndjson`, but wrapper IDs and revisions are disarded and import assigns new UUIDv7 IDs. Raw NSJSON without IDs and revision wrappers are suppoted.
 
 # Footer
 

@@ -46,7 +46,7 @@
               Patches support JSON Merge Patch and JSON Patch. Routes use Go's <code>net/http</code> package and live under <code>/db</code>.
             </p>
             <p>
-              The HTTP layer validates names and documents, limits body size, uses a consistent JSON error format. See the <a href="https://github.com/kantandb/server-go/blob/main/openapi.yaml">OpenAPI 3.2 specs</a> for the complete interface.
+              See the <a href="https://github.com/kantandb/server-go/blob/main/openapi.yaml">OpenAPI 3.2 specs</a> for the complete interface.
             </p>
           </div>
         </section>
@@ -76,22 +76,25 @@
         </section>
 
         <section class="design-section">
-          <h3>Indeces</h3>
+          <h3>Indices</h3>
           <div>
             <p>
-              Indeces are declared when a database is created. Each one maps a JSON Pointer path to ordered Pebble keys containing the encoded field value and document ID.
+              Indices are declared when a database is created. Each one maps a JSON Pointer path to ordered Pebble keys containing the encoded field value and document ID.
             </p>
           </div>
         </section>
 
         <section class="design-section">
-          <h3>JSONPath queries</h3>
+          <h3>jq queries</h3>
           <div>
             <p>
-              <code>QUERY /db/{database}</code> accepts RFC 9535 JSONPath in a JSON request body. A document matches when any scalar selected by the path satisfies the comparison.
+              <code>QUERY /db/{database}</code> accepts a raw jq queries as plain text. The server uses gojq to filter and transform documents from one Pebble snapshot.
             </p>
             <p>
-              A simple path uses a matching declared index when it is safe to do so. Other paths scan documents in ID order.
+              The default response is a JSON array with <code>application/x-ndjson</code> switching to NDJSON streams.
+            </p>
+            <p>
+              <code>Limit</code> and <code>Cursor</code> headers allows for pagination.
             </p>
           </div>
         </section>
@@ -100,10 +103,10 @@
           <h3>Bulk transfer</h3>
           <div>
             <p>
-              <code>GET /bulk/{database}</code> streams documents as NDJSON from a consistent Pebble snapshot. <code>POST /bulk/{database}</code> imports them with new UUIDv7 IDs and revisions, rebuilds the target database's index entries, and commits atomically.
+              Export done with '.' over <code>QUERY /db/{database}</code> and <code>Accept: application/x-ndjson</code> for streams.
             </p>
             <p>
-              Operators can limit transfer size, document count, Pebble batch size, duration, and concurrency.
+              Same stream can be imported with <code>POST /db/{database}</code> and <code>Content-Type: application/x-ndjson</code>, but wrapper IDs and revisions are disarded and import assigns new UUIDv7 IDs. Raw NSJSON without IDs and revision wrappers are suppoted.
             </p>
           </div>
         </section>

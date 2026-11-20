@@ -40,16 +40,16 @@
           <h3>Databases and documents</h3>
           <div>
             <p>
-              KantanDB groups JSON documents into named databases. A document is always a JSON object.
+              KantanDB uses JSON objects as documents and groups documents into named databases.
             </p>
           </div>
         </section>
 
         <section class="design-section">
-          <h3>Indexes and queries</h3>
+          <h3>Indices and queries</h3>
           <div>
             <p>
-              A database may define indexes over fields used often in queries. JSONPath handles queries that do not fit a declared index.
+              KantanDB uses <code>jq</code> as a query language and can define indices over often used fields. When index is not awailable the queryplanner fails back to full scan.
             </p>
           </div>
         </section>
@@ -58,7 +58,7 @@
           <h3>Persistence</h3>
           <div>
             <p>
-              A successful write survives a restart. A document and its index entries change together, so a query does not see half of an update.
+              A successful write survives a restart and a document changes are hapening atomically with indices updates.
             </p>
           </div>
         </section>
@@ -67,7 +67,7 @@
           <h3>Encryption</h3>
           <div>
             <p>
-              Document bodies are encrypted before they reach storage.
+              Document bodies are compressed and encrypted before they reach storage.
             </p>
           </div>
         </section>
@@ -84,7 +84,7 @@
             <h3>Go</h3>
           </div>
           <p>
-            The Go version uses net/http to serve requests, Pebble for storage, and AES-256-GCM to encrypt documents.
+            The Go version uses net/http to serve requests, Pebble for storage, and AES-256-GCM to encrypt documents. Supported output formats are JSON and stream NDJSON.
           </p>
         </div>
 

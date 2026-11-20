@@ -27,19 +27,19 @@ Anchor: `design`
 
 ## Databases and documents
 
-KantanDB groups JSON documents into named databases. A document is always a JSON object.
+KantanDB uses JSON objects as documents and groups documents into named databases.
 
-## Indexes and queries
+## Indices and queries
 
-A database may define indexes over fields used often in queries. JSONPath handles queries that do not fit a declared index.
+KantanDB uses `jq` as a query language and can define indices over often used fields. When index is not awailable the queryplanner fails back to full scan.
 
 ## Persistence
 
-A successful write survives a restart. A document and its index entries change together, so a query does not see half of an update.
+A successful write survives a restart and a document changes are hapening atomically with indices updates.
 
 ## Encryption
 
-Document bodies are encrypted before they reach storage.
+Document bodies are compressed and encrypted before they reach storage.
 
 # Implementations
 
@@ -47,7 +47,7 @@ Document bodies are encrypted before they reach storage.
 
 Status: Current
 
-The Go version uses net/http to serve requests, Pebble for storage, and AES-256-GCM to encrypt documents.
+The Go version uses net/http to serve requests, Pebble for storage, and AES-256-GCM to encrypt documents. Supported output formats are JSON and stream NDJSON.
 
 ## Rust
 
